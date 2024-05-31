@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Flex,
+  Image,
   Stack,
   Text,
   useColorMode,
@@ -17,7 +18,7 @@ export function Navbar() {
   return (
     <Box>
       <Flex
-        bg={useColorModeValue('white', 'gray.800')}
+bg={useColorModeValue('white', 'gray.800')}
         color={useColorModeValue('gray.600', 'white')}
         minH="60px"
         py={{ base: 2 }}
@@ -28,9 +29,15 @@ export function Navbar() {
         align="center"
       >
         <Flex flex={{ base: 1 }} justify="start">
+        <Image
+  src="./Sieber_und_soehne.jpg"
+  alt="Sieber und Söhne Enterprises"
+  boxSize="60px"
+  mr="12px"
+/>
           <Text
             as="span"
-            bgGradient="linear(to-l, #675AAA, #4399E1)"
+            bgGradient="linear(to-l, #FF1A03, #B8E4F1)"
             bgClip="text"
             fontWeight="bold"
             fontFamily="heading"

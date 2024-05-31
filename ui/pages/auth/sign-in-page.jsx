@@ -42,7 +42,7 @@ export default function SignInPage() {
         <Stack align="center">
           <Heading
             fontSize="4xl"
-            bgGradient="linear(to-l, #675AAA,#4399E1)"
+            bgGradient="linear(to-l, #FF1A03, #B8E4F1)"
             bgClip="text"
           >
             Sign in to your account
