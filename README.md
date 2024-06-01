@@ -1,209 +1,599 @@
-# Charm - Simple Tasks
-Running with **Meteor 3.0** and Node 20.
-Built with the CHARM (Chakra-UI, React, Meteor) stack.
 
-Deployed to Galaxy: https://simpletasks.meteorapp.com/
+### Auf Linux installieren
 
-## What and why this stack?
-The main goal is to make development as quick and efficient as possible. To achieve this, I have selected these technologies:
+**Debian 12:**
+**Curl und git installieren**
+```
+su -
+apt update
+apt install -y curl
+apt install -y git
+```
 
--   [Meteor ](https://meteor.com/)- A full-stack framework focused on productivity that uses RPCs and Sockets for reactivity.
--   [React ](https://reactjs.org/)- A minimal UI library for building on the web.
--   [Chakra UI ](https://chakra-ui.com/)- A React library focused on simplicity and productivity.
--   [React Hook Form ](https://react-hook-form.com/)- Performant, flexible, and extensible forms with easy-to-use validation.
--   [MongoDB ](https://www.mongodb.com/)- A NoSQL database that is really powerful for prototyping and creating ready-to-use apps out of the box.
--   [Meteor Cloud ](https://meteor.com/cloud)-  A cloud provider that makes deploying a server with a database included painless.
 
-### Features:
-- Sign In / Sign Up
-- List Tasks by logged-in user
-- Add Tasks
-- Remove Tasks
-- Mark a Task as Done
-- Filter Tasks by Status
+**Meteor mithilfe von Alternativskript installieren**
+https://docs.meteor.com/install
 
-Video demo:
-https://www.loom.com/share/50b9e1a513904b138fb772a332facbfb
+```
+curl https://install.meteor.com/ | sh 
+```
 
-## Running the template
+```
+exit
+```
 
-### Install dependencies
 
-```bash
+**SimpleTasks-Repositorie klonen.**
+**Durch das Klonen des SimpleTasks-Repositories wurde das simpletasks Directory erstellt. In das Directory wechseln**
+https://docs.github.com/de/repositories/creating-and-managing-repositories/cloning-a-repository
+```
+git clone https://github.com/fredmaiaarantes/simpletasks.git
+cd simpletasks
+```
+
+**Installieren Sie die benötigten NPM-Pakete:**
+https://github.com/fredmaiaarantes/simpletasks
+https://www.youtube.com/watch?v=OWwpyELXiWE&t=78s
+```
 meteor npm install
 ```
 
-### Running
-
-```bash
-meteor npm run start
+**Starten Sie die Anwendung:**
+Falls eine Fehlermeldung kommt einfach nochmal folgenden Befehl eingeben
+![[Pasted image 20240514202022.png]]
+```
+meteor
 ```
 
-### Run tests
+wenn das nicht funktionert meteor update eingeben.
 
-```bash
-meteor npm run test
+wenn das auch nicht funktioniert folgenden Befehl eingeben:
+```
+METEOR_LOG=debug meteor run
 ```
 
-### Cleaning up your local DB
-
-```bash
-meteor reset
+**Beenden der Anwendung:**
+```
+Linux: Strg + C
+MacOS: control + C
 ```
 
-### Deploy to Galaxy with free MongoDB
-```bash
-meteor deploy <select a subdomain>.meteorapp.com --free --mongo
+
+Im simpletasks Ordner einen Ordner public im simpletasks Ordner erstellen und dort das Logo reinkopieren  
+Überprüfen ob man sich im simple tasks ordner befindet.
+```
+cd ~/simpletasks
+mkdir public
+ls
 ```
 
-## Done
-- Integrate to Chakra-UI
-- Use ESLint, Prettier, and Husky
-- Host in Galaxy
-- Meteor APM monitoring
-- Use React Router 6 and Lazy Loading
-- Use React Hook Form and Zod for validation
-- Galaxy SEO Support
-- Define directory structure
-- Add database migrations
-- Integration tests for methods and publications
-
-## Main Meteor packages
-- react-meteor-data
-- quave:migrations
-- force-ssl
-- mdg:seo
-- jam:easy-schema
-- meteortesting:mocha
-
-## Tech Explanation
-
-### How is the project structured?
-
-Before explaining, this template is inspired by the works of [Alex Kondov](https://alexkondov.com/): [Tao of Node ](https://alexkondov.com/tao-of-node/) and [Tao of React](https://alexkondov.com/tao-of-react/)
-
-Most Meteor apps are built similarly to a monorepo with their divisions for the back end and front end declared respectively in `ui` and `api` folders. You can have a common folder to share code between the front end and back end. For example, if you use TypeScript, you can share types in your codebase.
-
-![Project structure](README-Assets/project_structure.png)
-
-A good practice that needs to be pointed out is organizing the folders by feature so that when we think about that specific domain feature, we only need to go to that feature folder, and everything exclusive to that feature should be there.
-
-We usually place things in the common directory when we have items that will be used in many places.
-
-### Backend decisions
-
-In this template, we have chosen to use Mongo, shipped out of the box with Meteor.js, and added some packages to make it even more productive. That being said, we decided to use `simpl-schema` and `percolate:migrations`. The first one is for validating schemas in runtime, and the second one is for creating database migrations.
-
-#### Database Migrations
-
-> Questions on how to structure your migrations?
->
-> **Use api/db/migration.js as your reference**
-
-* * *
-
-This is the kind of feature that sometimes comes in handy. Whenever the server starts, it runs the code below located in `api/main.js`:
-
-```javascript
-import { Meteor } from "meteor/meteor";
-import { Migrations } from "meteor/percolate:migrations";
-import "./db/migrations";
-import "./tasks/tasks.methods";
-import "./tasks/tasks.publications";
-
-/**
- * This is the server-side entry point
- */
-Meteor.startup(() => {
-  Migrations.migrateTo("latest");
-});
+Logo in den Public ordner in simpletasks verschieben 
+**Pfad überprüfen**
+```
+mv ~/Downloads/Sieber_und_soehne.jpg ~/simpletasks/public
+cd public
+ls
 ```
 
-It gathers all migrations that have not been applied and applies them.
-
-A great use for migrations is when you have a change in your database, and you might need everyone to have at least the default data.
-
-For more details, you can check [the package docs](https://github.com/percolatestudio/meteor-migrations).
-
-#### Schemas
-
-Schemas are a way to ensure that the data coming from the front is as expected and sanitized.
-
-We have decided to use `simpl-schema`, attaching it to our collection as you can see in `api/tasks/tasks.collection.js`. By doing this, all data that goes into our Database is validated and follows the structure we defined. You can see how a Task is structured, and having that schema, we can start implementing methods and publications.
-
-Don't forget to check [simpl-schema docs](https://www.npmjs.com/package/simpl-schema) in case of doubts about how to use it.
-
-#### Server Connection
-
-Following the idea of having a folder for each feature, and if it connects to the front end, we need to provide a way to connect.
-
-Meteor works similarly to [tRPC](https://trpc.io/) and [Blitz.js](https://blitzjs.com/). This model has server functions that get called through a Remote Procedure Call (RPC). In this template, calls that are related to tasks are in the `api/tasks/tasks.methods.js` folder.
-
-```javascript
-/**
- Removes a task from the Tasks collection.
- @async
- @function removeTask
- @param {Object} taskData - The task data.
- @param {string} taskData.taskId - The ID of the task to remove.
- @returns {Promise<void>}
- */
-async function removeTask({ taskId }) {
-  check(taskId, String);
-  await checkTaskOwner({ taskId });
-  return Tasks.removeAsync(taskId);
-}
-// ...
-Meteor.methods({
-  insertTask,
-  removeTask,
-  toggleTaskDone,
-});
+navbar.jsx öffnen (Logo und farben ändern)
+```
+cd ~/simpletasks/ui/common/components
+nano navbar.jsx
 ```
 
-So in order to call this server method, we need to call it by its name. It would look like this:
+In dieser Datei einfach alles rauslöschen und folgenden Code reinkopieren.
+src="/Sieber_und_soehne.jpg" statt Sieber_und_soehne.jpg den genauen Dateinamen + Endung des Logos im public Ordner eingeben.
+Hier finden auch die Farbanpassungen von weiß auf grau und grau auf schwarz statt.
+**control + K bzw. Strg + K** einzelne Zeilen löschen.
+```
+import React from 'react';
+import {
+  Box,
+  Button,
+  Flex,
+  Image,
+  Stack,
+  Text,
+  useColorMode,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
+import { Logout } from './logout';
 
-This sample comes from `ui/tasks/components/task-item.jsx`:
+export function Navbar() {
+  const { colorMode, toggleColorMode } = useColorMode();
 
-```javascript
-async function onDelete(_id) {
-  await Meteor.callAsync('removeTask', { taskId: _id });
+  return (
+    <Box>
+      <Flex
+bg={useColorModeValue('white', 'gray.800')}
+        color={useColorModeValue('gray.600', 'white')}
+        minH="60px"
+        py={{ base: 2 }}
+        px={{ base: 4 }}
+        borderBottom={1}
+        borderStyle="solid"
+        borderColor={useColorModeValue('gray.200', 'gray.900')}
+        align="center"
+      >
+        <Flex flex={{ base: 1 }} justify="start">
+        <Image
+  src="./Sieber_und_soehne.jpg"
+  alt="Sieber und Söhne Enterprises"
+  boxSize="60px"
+  mr="12px"
+/>
+          <Text
+            as="span"
+            bgGradient="linear(to-l, #FF1A03, #B8E4F1)"
+            bgClip="text"
+            fontWeight="bold"
+            fontFamily="heading"
+            textAlign="left"
+          >
+            Simple Tasks
+          </Text>
+        </Flex>
+
+        <Stack
+          flex={{ base: 1, md: 0 }}
+          justify="flex-end"
+          direction="row"
+          spacing={6}
+        >
+          <Button
+            onClick={toggleColorMode}
+            aria-label={colorMode === 'light' ? 'Moon Icon' : 'Sun Icon'}
+          >
+            {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+          </Button>
+          <Logout />
+        </Stack>
+      </Flex>
+    </Box>
+  );
 }
 ```
 
-#### Subscriptions
 
-MeteorJS supports subscriptions out of the box as can be seen in `api/tasks/tasks.publications.js`. These publications are called in a similar way to RPC methods, but their values are reactive. For more details on how to deal with and think in reactive programming, [Andre Stalz ](http://andre.staltz.com)has [this gist introducing Reactive Programming](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)and [Kris Kowal](https://github.com/kriskowal) has [this Repo](https://github.com/kriskowal/gtor) that discusses the theory of reactivity in-depth.
+https://forums.meteor.com/t/unable-to-display-images/40095/5
 
-> For using a subscription as you can see in our docs, is similar to using methods. In React we use meteor/react-meteor-data for having a react way of calling those methods
 
-For a good example of Subscriptions, you can look in `ui/tasks/tasks-page.jsx`
+Dann wieder in den simpletasks Ordner und schauen ob es funktioniert.
+```
+cd ~/simpletasks
+```
 
-### Frontend decisions
+```
+meteor
+```
 
-![Task Form](README-Assets/task_example.png)
 
-#### React with Meteor is &lt;3
+```
+cd ~/simpletasks/ui/pages/tasks
+nano tasks-page.jsx
+```
 
-As for our frontend framework, we have chosen React for its productive ecosystem and simplicity. Meteor has a package for querying data using hooks, which makes you think only about bringing solutions to life.
 
-For more information, you can check [react-meteor-data repository](https://github.com/meteor/react-packages/tree/master/packages/react-meteor-data#react-meteor-data) for more details on using the best of them.
+Wie vorher alles rauslöschen und folgendes reinkopieren. (**Navbar ändern**)
 
-#### Forms
+**Vlt hier für das restliche UI die farben reinhauen**
 
-As one of the key parts of the front end, we have chosen a library to help us deal with this piece. React Hook Form is a performant, flexible, and extensible library with easy-to-use validation. A good template for creating this kind of form is located in `ui/pages/tasks/components/task-form.jsx`. It is also integrated with Zod and Meteor by its call method.
+```
+import React, { Suspense } from 'react';
+import { TaskForm } from './components/task-form';
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Spinner,
+  Stack,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { TaskItem } from './components/task-item';
+import { useTasks } from './hooks/use-tasks';
 
-Want to know more about how to create forms with React Hook Form? Check [their documentation](https://www.react-hook-form.com).
+/* eslint-disable import/no-default-export */
+export default function TasksPage() {
+  const { hideDone, setHideDone, tasks, count, pendingCount } = useTasks();
+  return (
+    <>
+      <Stack textAlign="center" spacing={{ base: 8 }} py={{ base: 10 }}>
+        <Heading fontWeight={600}>
+          <Text
+            as="span"
+            bgGradient="linear(to-l, #FF1A03, #B8E4F1)"
+            bgClip="text"
+          >
+            Simple Tasks
+          </Text>
+        </Heading>
+      </Stack>
+      <TaskForm />
+      <Suspense fallback={<Spinner />}>
+        <Box
+          mt={8}
+          py={{ base: 2 }}
+          px={{ base: 4 }}
+          pb={{ base: 4 }}
+          border={1}
+          borderStyle="solid"
+          borderRadius="md"
+          borderColor={useColorModeValue('gray.200', 'gray.700')}
+        >
+          <HStack mt={2}>
+            <Box w="70%">
+              <Text
+                as="span"
+                color={useColorModeValue('gray.600', 'gray.400')}
+                fontSize="xs"
+              >
+                You have {count} {count === 1 ? 'task ' : 'tasks '}
+                and {pendingCount || 0} pending.
+              </Text>
+            </Box>
+            <Stack w="30%" justify="flex-end" direction="row">
+              <Button
+                bg="teal.600"
+                color="white"
+                colorScheme="teal"
+                size="xs"
+                onClick={() => setHideDone(!hideDone)}
+              >
+                {hideDone ? 'Show All Tasks' : 'Show Pending'}
+              </Button>
+            </Stack>
+          </HStack>
+          {tasks.map(task => (
+            <TaskItem key={task._id} task={task} />
+          ))}
+        </Box>
+      </Suspense>
+    </>
+  );
+}
+```
 
-#### The productivity core: Chakra-UI
+```
+nano ~/simpletasks/ui/pages/auth/sign-in-page.jsx
+```
 
-![Sign in Dark](README-Assets/sign_in_dark.png)
+```
+import React from 'react';
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Heading,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Stack,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { useUserId } from 'meteor/react-meteor-accounts';
+import { useLogin } from './hooks/use-login';
+import { Navigate } from 'react-router-dom';
+import { routes } from '../../routes';
 
-![Sign in Light](README-Assets/sign_in_light.png)
+/* eslint-disable import/no-default-export */
+export default function SignInPage() {
+  const userId = useUserId();
+  const {
+    loginOrCreateUser,
+    isSignup,
+    setIsSignup,
+    showPassword,
+    setShowPassword,
+    register,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+  } = useLogin();
 
-For our UI components, we have chosen Chakra UI because of its productivity that matches what Meteor does in the backend creating a lovely flow with an outstanding Developer Experience.
+  if (userId) {
+    return <Navigate to={routes.tasks} />;
+  }
 
-We have included Dark and Light modes. It can be seen those configs in `ui/common/components/ui-provider.jsx`.
+  return (
+    <Flex align="center" justify="center">
+      <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
+        <Stack align="center">
+          <Heading
+            fontSize="4xl"
+            bgGradient="linear(to-l, #FF1A03, #B8E4F1)"
+            bgClip="text"
+          >
+            Sign in to your account
+          </Heading>
+          <Text fontSize="lg" color={useColorModeValue('gray.600', 'gray.400')}>
+            to start creating your simple tasks
+          </Text>
+        </Stack>
+        <Box
+          rounded="lg"
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow="lg"
+          p={8}
+        >
+          <form onSubmit={handleSubmit(loginOrCreateUser)}>
+            <Stack spacing={4}>
+              <FormControl isInvalid={!!errors.username}>
+                <Input
+                  id="username"
+                  placeholder="Enter your username"
+                  autoComplete="username"
+                  {...register('username')}
+                />
+                <FormErrorMessage>{errors.username?.message}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.password}>
+                <InputGroup size="md">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter your password"
+                    autoComplete="current-password"
+                    {...register('password')}
+                  />
+                  <InputRightElement width="4.5rem">
+                    <Button
+                      h="1.75rem"
+                      size="sm"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? 'Hide' : 'Show'}
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
+                <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
+              </FormControl>
+              {!isSignup && (
+                <>
+                  <Stack spacing={10}>
+                    <Button
+                      type="submit"
+                      bg="blue.600"
+                      color="white"
+                      _hover={{
+                        bg: 'blue.500',
+                      }}
+                      isLoading={isSubmitting}
+                    >
+                      Sign in
+                    </Button>
+                  </Stack>
+                  <Stack spacing={10}>
+                    <Button onClick={() => setIsSignup(true)}>
+                      Create a new account
+                    </Button>
+                  </Stack>
+                </>
+              )}
 
-You can see Chakra-UI's full component list on [their website](https://chakra-ui.com/getting-started).
+              {isSignup && (
+                <>
+                  <Stack spacing={10}>
+                    <Button
+                      type="submit"
+                      bg="green.600"
+                      color="white"
+                      _hover={{
+                        bg: 'green.500',
+                      }}
+                      isLoading={isSubmitting}
+                    >
+                      Sign up
+                    </Button>
+                  </Stack>
+                  <Stack spacing={10}>
+                    <Button onClick={() => setIsSignup(false)}>
+                      I have an account
+                    </Button>
+                  </Stack>
+                </>
+              )}
+            </Stack>
+          </form>
+        </Box>
+      </Stack>
+    </Flex>
+  );
+}
+```
 
+
+Button add task farbe ändern:
+```
+nano ui/pages/tasks/components/task-form.jsx
+```
+
+```
+import React from 'react';
+import { Box, Button, FormControl, FormErrorMessage, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import { useTaskForm } from '../hooks/use-task-form';
+
+export function TaskForm() {
+  const { saveTask, handleSubmit, register, formState: { errors, isSubmitting } } = useTaskForm();
+
+  return (
+    <Box>
+      <form onSubmit={handleSubmit(saveTask)}>
+        <InputGroup size="md">
+          <FormControl isInvalid={!!errors.description}>
+            <Input
+              h="2.6rem"
+              pr="6rem"
+              id="description"
+              {...register('description')}
+              placeholder="Type to add new tasks"
+            />
+            <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
+          </FormControl>
+          <InputRightElement width="6rem">
+            <Button
+              h="2.5rem"
+              size="sm"
+              bgGradient="linear(to-l, #FF1A03, #B8E4F1)"
+              color="white"
+              type="submit"
+              isLoading={isSubmitting}
+              colorScheme="blue"
+            >
+              Add Task
+            </Button>
+          </InputRightElement>
+        </InputGroup>
+      </form>
+    </Box>
+  );
+}
+```
+
+**Nach den Änderungen sollte die Applikation folgendermaßen aussehen:**
+![[Pasted image 20240515145521.png]]
+![[Pasted image 20240515144654.png]]
+
+# Meteor UP
+```
+su -
+apt install npm
+exit
+
+npm install -g mup
+```
+
+### Neue AWS Instance erstellen
+https://github.com/fknipp/biti-weba-cheatsheets/blob/main/creating-ec2-instance.md
+
+Den Port 3000 freigeben
+```
+#In der neuen AWS Instance folgende Befehle eingeben
+sudo yum update
+sudo yum install -y docker
+#sudo usermod -a -G docker ec2-user
+docker --version
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo systemctl status docker
+sudo docker run hello-world
+```
+
+# MongoDB Datenbank erstellen
+https://www.mongodb.com/products/platform/atlas-database
+Dort account erstellen
+alles ausfüllen
+Frankfurt passt
+den button links neben finsh drücken
+Dort shared auswählen
+dann create cluster
+create user
+dann auf cloud environment wechseln
+finish and close 
+dann auf network access
+add ip address
+allow access from anywhere anklicken
+confirm
+databse access 
+edit
+built in role 
+dort auf atlas admin setzen
+update user
+database -> connect -> drivers -> connection string kopieren
+
+diese in der mup.js 
+bei mongo url einfügen dann passwort auf das festgelegte passwort ändern
+
+```
+#Meteor UP install
+su -
+apt install npm
+npm install -g mup
+#Deploy
+mup init
+cd. deploy 
+ls
+nano mup.js
+mup setup
+mup deploy
+#für neue config reinhauen bzw jo
+mup reconfig
+```
+### Zusatzaufgabe
+**Installation in Meteor Cloud**
+
+- Personal Access Token erstellen
+	https://docs.github.com/de/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token
+
+- **Github Repository erstellen**
+	https://docs.github.com/de/repositories/creating-and-managing-repositories/quickstart-for-repositories
+
+**Projekt auf Github veröffentlichen**
+
+```bash
+# Navigieren Sie zum Projektordner
+cd ~/simpletasks
+
+# Initialisieren Sie das Git-Repository
+git init
+
+# Fügen Sie das Remote-Repository hinzu
+git remote add origin https://github.com/sieber-soehne/simpletasks.git
+
+# Fügen Sie alle Dateien hinzu
+git add .
+
+# Commiten Sie die Dateien
+git commit -m "Initial commit"
+
+# Pushen Sie den Branch 'main' zu GitHub
+git push -u origin main
+
+# Beispiel für Eingabeaufforderung
+Username for 'https://github.com': USERNAME
+Password for 'https://Memo-HD@github.com': YOUR_PERSONAL_ACCESS_TOKEN
+```
+
+
+Falls folgendes kommt einfach den folgenden Schritten folgen:
+Git Repository löschen (Einstellungen im Repository -> ganz runterscrollen und löschen)und ein neues erstellen:
+```
+git push -u origin main
+Username for 'https://github.com': sieber-soehne
+Password for 'https://sieber-soehne@github.com': 
+remote: Permission to fredmaiaarantes/simpletasks.git denied to sieber-soehne.
+fatal: unable to access 'https://github.com/fredmaiaarantes/simpletasks.git/': The requested URL returned error: 403
+
+debian@debian:~/simpletasks$ git init
+Reinitialized existing Git repository in /home/debian/simpletasks/.git/
+debian@debian:~/simpletasks$ git remote add origin https://github.com/sieber-soehne/simpletasks.git
+error: remote origin already exists.
+debian@debian:~/simpletasks$ git remote -v
+origin	https://github.com/fredmaiaarantes/simpletasks.git (fetch)
+origin	https://github.com/fredmaiaarantes/simpletasks.git (push)
+debian@debian:~/simpletasks$ git remote set-url origin https://github.com/sieber-soehne/simpletasks.git
+debian@debian:~/simpletasks$ git push -u origin main
+
+```
+
+Deployen dauert nur eine halbe ewigkeit circa 10min
+**Tutorial Installation in Meteor Cloud:** 
+	https://www.youtube.com/watch?v=VsyHIRel9ZE&t=237s
+
+**Link zu Meteor Cloud**
+	https://cloud.meteor.com/
+
+Nach dem deployen hat circa 14min gedauert läuft die Applikation in der meteorcloud
+**Meine Applikation ist erreichbar unter:**
+https://kilian.sieber.simpletasks.meteor.meteorapp.com
+![[Pasted image 20240515152955.png]]
+
+![[Pasted image 20240515153017.png]]
+
+![[Pasted image 20240515153110.png]]
+
+**Installation mit Docker**
