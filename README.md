@@ -533,7 +533,7 @@ mup reconfig
 	https://docs.github.com/de/repositories/creating-and-managing-repositories/quickstart-for-repositories
 
 **Projekt auf Github veröffentlichen**
-
+Die Meteor Applikation darf während des nächsten Schritt nicht laufen.
 ```bash
 # Navigieren Sie zum Projektordner
 cd ~/simpletasks
