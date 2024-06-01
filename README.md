@@ -580,7 +580,7 @@ debian@debian:~/simpletasks$ git push -u origin main
 
 ```
 
-Deployen dauert nur eine halbe ewigkeit circa 10min
+Deployen dauert circa 10min
 **Tutorial Installation in Meteor Cloud:** 
 	https://www.youtube.com/watch?v=VsyHIRel9ZE&t=237s
 
